@@ -30,8 +30,6 @@ $ msbuild sbbChallenge.csproj
 $ mono obj/sbbChallenge.exe -i <path-to-sbb-problem>
 ```
 
-
-
 ## Documentation
 
 The code is mostly documented though the use of interfaces and comments. This I complement here by an quick overview of the project organization. I presume that the reader has some knowledge of the algorithm implemented here. For this I refer to the thesis (pdf). Chapters 1 & 4 can be skiped. Chapter 2 can be skiped by readers familiar with the work of Gröflin, Klinkert & Bürgy. 
@@ -68,7 +66,3 @@ Make sure you understand the problem definition in ProblemDefinition.IProblem, i
 [Bürgy R (2017) A neighborhood for complex job shop scheduling problems with regular objectives](https://link.springer.com/article/10.1007/s10951-017-0532-2)
 
 [Bürgy R, Gröflin H (2017) The no-wait job shop with regular objective: a method based on optimal job insertion](https://link.springer.com/article/10.1007/s10878-016-0020-1)
-
-## MIT License
-
-However, I greatly appreciate you letting me know when you use the code (intentions / feedback).
