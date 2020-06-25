@@ -1,5 +1,7 @@
 # Adaptation of the Gröflin-Klinkert-Bürgy Local Search for the Sbb Crowd AI Challenge
 
+<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage1.png" alt="drawing" height="800"/>
+
 On this github repository you find my master [thesis](https://github.com/MrPascalCase/SbbChallenge/blob/master/Thesis.pdf) & project. 
 
 The SBB (swiss federal railways) challenge is a time table generation problem. At the core this is a *blocking-job-shop scheduling problem*: Given is a set of *jobs* (trains) each has to go through a set of *operations*. Operations conflict if they use the same *machine* (track segment). Each machine can only be used by one job at a time. The aim is, to assign conflict free entry times, such that the delay is minimized. A main complication comes form the *blocking* nature of the problem: a machine is only freed, when a job moved to the next.
@@ -9,6 +11,7 @@ The links to the challenge:
 * <https://www.crowdai.org/challenges/train-schedule-optimisation-challenge>
 
 * <https://github.com/crowdAI/train-schedule-optimisation-challenge-starter-kit>
+
 
 
 
@@ -50,7 +53,7 @@ First, we get the easy things out of the way. These name-spaces ....
 
 The core of the algorithm, the names-space **Layers:** I tried to split the algorithm into reasonable modules to increase readability and to make modifications/experiments easier. Guiding principles are *single responsibility* and avoidance of *cyclic dependencies*. At the bottom of the resulting layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifications of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibility of solutions. Note, the file Layers._Interfaces.cs, which both enforces some modularity and provides some overview/documentation is a good starting point to read the code.
 
-<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage.png" alt="drawing" height="600"/>
+<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage2.png" alt="drawing" height="600"/>
 
 ## Most important references
 
