@@ -16,7 +16,6 @@ The links to the challenge:
 
 
 
-
 ## Dependencies
 
 * .Net Framework v4.7.2 (or later), which includes
@@ -28,18 +27,13 @@ The links to the challenge:
 
 * dot / graphviz if you want to output debug visualizations (such as the image above, <https://graphviz.org/>)
 
-## Usage
-
-### Linux
+## Usage (eg. Linux/Mono)
 
 ```console
 $ cd SbbChallenge/
 $ msbuild SbbChallenge.csproj
-$ mono obj/SbbChallenge.exe <path-to-sbb-problem> [-s <seed>] [-i <maxIter>] [-t <maxSeconds>] [-r <maxRoutesToConsiderPerJob>] 
+$ mono obj/SbbChallenge.exe <PathToProblem> [-s <Seed>] [-i <MaxIterations>] [-t <MaxSearchSeconds>] [-r <MaxRoutesToConsiderPerJob>] 
 ```
-### Other OS
-
-Is left as an exercise for the reader.
 
 ## Documentation
 
@@ -47,7 +41,7 @@ The code is mostly documented though interfaces and comments. Here by an quick o
 
 * **IntegrityChecks:** fancy asserts. There are many, and some are so slow, that it became necessary to enable/disable and document them. 
 
-* **Helper:** some LINQ-like extensions and basic data types. Of note is the class Graph which implements a forward/backward adjacency list graph (vertices : int, edges labeled with (machineId : int) * (length : TimeSpan)). 
+* **Helpers:** some LINQ-like extensions and basic data types. Of note is the class Graph which implements a forward/backward adjacency list graph (vertices : int, edges labeled with (machineId : int) * (length : TimeSpan)). 
 
 * **ProblemDefintion:** IProblem defines the blocking-job-shop problem general enough, that both, instances studied in academia and the problems provided by SBB are modelled as such. The class Problem (immutable) is constructed form an IProblem and caches/preprocesses various things. ProblemTransformation provided IProblem extension methods to remove unnecessary Routes/Machines/Operations.
 
