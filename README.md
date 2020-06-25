@@ -1,6 +1,6 @@
 # Adaptation of the Gröflin-Klinkert-Bürgy Local Search for the Sbb Crowd AI Challenge
 
-<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage1.png" alt="drawing" height="800"/>
+<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage1.png" alt="drawing" height="500"/>
 
 (Image: A visualization of a precedence constraint graph representing a time table.)
 
