@@ -37,9 +37,7 @@ $ mono obj/SbbChallenge.exe -i <path-to-sbb-problem>
 
 ## Documentation
 
-The code is mostly documented though interfaces and comments. Here by an quick overview of the project organization. I presume that the reader has some knowledge of the algorithm implemented here. For this I refer to the thesis (pdf). Chapters 1 & 4 can be skipped. Chapter 2 can be skipped by readers familiar with the work of Gröflin, Klinkert & Bürgy. 
-
-First, we get the easy things out of the way. These name-spaces ....
+The code is mostly documented though interfaces and comments. Here by an quick overview of the project organization. We have the following name spaces:
 
 * **IntegrityChecks:** fancy asserts. There are many, and some are so slow, that it became necessary to enable/disable and document them. 
 
@@ -53,7 +51,7 @@ First, we get the easy things out of the way. These name-spaces ....
 
 * **Search:** The algorithm provides a neighborhood. This runs a taboo-search to find a local optimum. It is kept as simple as possible. 
 
-The core of the algorithm, the names-space **Layers:** I tried to split the algorithm into reasonable modules to increase readability and to make modifications/experiments easier. Guiding principles are *single responsibility* and avoidance of *cyclic dependencies*. At the bottom of the resulting layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifications of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibility of solutions. Note, the file Layers._Interfaces.cs, which both enforces some modularity and provides some overview/documentation is a good starting point to read the code.
+* **Layers:** The core of the algorithm. I tried to split the algorithm into reasonable modules to increase readability and to make modifications/experiments easier. Guiding principles are *single responsibility* and avoidance of *cyclic dependencies*. At the bottom of the resulting layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifications of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibility of solutions. Note, the file Layers._Interfaces.cs, which both enforces some modularity and provides some overview/documentation, is a good starting point to read the code.
 
 <img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage2.png" alt="drawing" height="600"/>
 

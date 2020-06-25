@@ -63,7 +63,7 @@ namespace sbbChallange.Layers
 
         public double GetDelayCost()
         {
-            GraphLayer.UpdateTimes(CancellationToken.None);
+            GraphLayer.UpdateTimes();
             return CostLayer.GetDelayCost();
         }
         

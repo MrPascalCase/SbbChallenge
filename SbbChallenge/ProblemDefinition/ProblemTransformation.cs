@@ -10,26 +10,7 @@ using SbbChallenge;
 namespace sbbChallange.ProblemDefinition
 {
     public static class ProblemTransformation
-    {
-        public static void PrintProblemSizes()
-        {
-            foreach (var file in EntryPoint.InputFiles)
-            {
-                Scenario scenario = Scenario.ReadFromFile(file);
-                scenario.Setup();
-
-                Console.WriteLine("Before removing redundancy:");
-                Console.WriteLine(scenario.NodesFixedAlternativeArcCountsToString());
-
-                IProblem iprob = scenario.RemoveRedundantMachines();
-                iprob = iprob.RemoveRedundantOperations();
-                
-                Console.WriteLine("After removing redundancy:");
-                Console.WriteLine(iprob.NodesFixedAlternativeArcCountsToString());
-            }
-        }
-        
-        
+    {        
         /// <summary>
         /// Reports the following counts and rates in a readable string:
         /// - #nodes

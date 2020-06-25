@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 using sbbChallange.ProblemDefinition;
 using SbbChallenge.Helpers;
@@ -165,7 +164,7 @@ namespace sbbChallange.Layers
 
             GraphMachinesIntegrity.Check(Problem, Solution, GraphLayer, SequencingLayer);
 
-            GraphLayer.UpdateTimes(CancellationToken.None);
+            GraphLayer.UpdateTimes();
 
             TimesGraphIntegrity.DoCheck(GraphLayer);
         }

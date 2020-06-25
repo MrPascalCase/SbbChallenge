@@ -10,7 +10,7 @@ namespace sbbChallange.Layers
     /// <summary>
     /// A Solution to a blocking job shop problem.
     /// - specifies for each job which route we should take.
-    /// - specifies for each operation it's entry time.
+    /// - specifies for each operation its entry time.
     /// </summary>
     public interface ISolution : 
         IEquatable<ISolution>
@@ -29,10 +29,10 @@ namespace sbbChallange.Layers
         /// </summary>
         [Pure] Job GetJob(int operationId);
         
-        /// <summary>  If no route is set, getRoute return null if canBeNull==true, else throws an exception.</summary>
+        /// <summary> If no route is set, getRoute return null if canBeNull==true, else throws an exception.</summary>
         [Pure] Route GetRoute(Job job, bool canBeNull = false);
         
-        /// <summary>  If no route is set, getRoute return null if canBeNull==true, else throws an exception.</summary>
+        /// <summary> If no route is set, getRoute return null if canBeNull==true, else throws an exception.</summary>
         [Pure] Route GetRoute(int operationId, bool canBeNull = false);
         
         /// <summary> If no route is set, or the present route is too short, getOperation returns null if
@@ -89,6 +89,7 @@ namespace sbbChallange.Layers
 
     public static class GraphShortcuts
     {
+        // IGraph extension methods:
         public static void AddArc(this IGraph graph, Arc arc) =>
             graph.AddArc(arc.Tail, arc.Head, arc.MachineId, arc.Length);
 
@@ -108,8 +109,9 @@ namespace sbbChallange.Layers
     
     
     /// <summary>
-    /// The graph layer could reasonable also be called "Times" layer, as it takes care to update the entry times
-    /// whenever we add/remove arcs into the underlying scheduling graph.
+    /// The graph layer takes care of updating the entry times. keeps track of adding/removeing arcs into the
+    /// underlying scheduling graph. (see Thesis: 3.7 Update entry times; 1.4 Disjunctive graph;
+    /// Definition 1.3 Critical arcs)
     /// </summary>
     public interface IGraphLayer : 
         IGraph, 
@@ -124,7 +126,7 @@ namespace sbbChallange.Layers
         /// (As opposed to always update all entry times.)
         /// This function triggers this update. (See thesis, 3.7 Updating the entry times)
         /// </summary>
-        void UpdateTimes(CancellationToken cTok = default);
+        void UpdateTimes();
         [Pure] bool TimesAreUpToDate();
 
         void SetRoute (Job job, Route route);
@@ -192,8 +194,6 @@ namespace sbbChallange.Layers
         /// <summary> To check if a taboo arc exist as a transitive arc. </summary>
         [Pure] bool TransitiveArcExist (MachineOccupation fst, MachineOccupation snd);
         
-        //[Pure] int NumberOfMissedConnections();
-
         [Pure] IEnumerable<IJobSequence> GetMissedConnectionSequences();
         
         [Pure] IEnumerable<Arc> GetConnectionCriticalArcs(); 
@@ -213,12 +213,6 @@ namespace sbbChallange.Layers
 
         void LeftClosure(IEnumerable<Arc> inserted);
         void LeftClosure(params Arc[] inserted);
-        
-        //void LeftClosure(Arc inserted, bool useTerminationCriterion, TimeSpan manuallySetCriterion);
-        //void LeftClosure(Arc inserted, ref TimeSpan termination, List<int> stoppedAt);
-
-        //[Obsolete] bool MoveLeft(MachineOccupation occupation);
-        //[Obsolete] bool MoveRight(MachineOccupation occupation);
         
         void LeftClosureWithRemoval(Arc toBeRemoved);
         void RightClosureWithRemoval(Arc toBeRemoved);
@@ -304,7 +298,7 @@ namespace sbbChallange.Layers
             bool routePenaltyImprovement
         );
         
-        // See thesis, 3.1 transitive arcs
+        // See Thesis, 3.1 Transitive arcs
         [Pure] bool TransitiveArcExist (Arc arc);
         
         void ExecuteMove (Move move);

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using sbbChallange;
 using sbbChallange.ProblemDefinition;
 using sbbChallange.Layers;
 using sbbChallange.SbbProblem;
 using sbbChallange.Search;
+using SbbChallenge.Helpers;
 
 using static sbbChallange.IntegrityChecks.Asserts;
 using Route = sbbChallange.ProblemDefinition.Route;
@@ -15,34 +17,20 @@ namespace SbbChallenge
 {
     internal static class EntryPoint
     {
-        public static readonly string[] InputFiles =
-            new []
-                {
-                    "sample_scenario",
-                    "01_dummy",
-                    "02_a_little_less_dummy",
-                    "03_FWA_0.125",
-                    "04_V1.02_FWA_without_obstruction",
-                    "05_V1.02_FWA_with_obstruction",
-                    "06_V1.20_FWA", // 29mb
-                    "07_V1.22_FWA", // 38mb
-                    "08_V1.30_FWA", // 16mb
-                    "09_ZUE-ZG-CH_0600-1200", // 24mb
-                }
-                .Select(f => $"../../../../Thesis/Data/Input/{f}.json")
-                .ToArray();
-
         private static readonly (string, string)[] InputOptionDescriptions =
         {
-            ("-i | --input", "Specify the path to an input file. "),
             ("-s | --seed (Optional)", "Specify a seed to use. If no seed is specified, a random seed is used."),
-            ("--maxIter (Optional)", "Specify a maximum iteration to preform"),
-            ("--maxTime (Optional)", "Specify a maximum search time, eg 90s or 1h40m40s")
+            ("-i | --maxIter (Optional)", "Specify a maximum iteration to preform"),
+            ("-t | --maxTime (Optional)", "Specify a maximum search time, in seconds"),
+            ("-r | --restrictRouting (Optional)", "Specify a maximum number of routes to consider for each job.")
         };
 
         static void ShowUsage()
         {
             Console.WriteLine("Usage:");
+            
+            Console.WriteLine("As a first argument, specify the path to a input file.");
+            Console.WriteLine("Supported are SBB .json files or academic instances (such as lawrence) .txt.");
             
             int leftLength = InputOptionDescriptions.Select(t => t.Item1.Length).Max() + 2;
             
@@ -55,14 +43,30 @@ namespace SbbChallenge
             out Random random, 
             out string inputFile, 
             out TimeSpan maxTime,
-            out int maxIter)
+            out int maxIter, 
+            out int restrictRouting)
         {
             random = new Random();
             inputFile = null;
             maxIter = Int32.MaxValue;
             maxTime = TimeSpan.MaxValue;
+            restrictRouting = Int32.MaxValue;
+
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Failure: No input file specified.");
+                return false;
+            }
             
-            for (int i = 0; i < args.Length; i += 2)
+            if (File.Exists(args[0])) inputFile = args[0];
+
+            else
+            {
+                Console.WriteLine($"Failure: file {args[0]} not found.");
+                return false;
+            }
+            
+            for (int i = 1; i < args.Length; i += 2)
             {
                 if (i + 1 >= args.Length)
                 {
@@ -75,23 +79,11 @@ namespace SbbChallenge
 
                 switch (option)
                 {
-                    case "i":
-                    case "input":
-                        if (File.Exists(argument))
-                        {
-                            inputFile = argument;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Failure: file {argument} not found.");
-                            return false;
-                        }
-                        break;
-
                     case "s":
                     case "seed":
                     {
                         bool success = int.TryParse(argument, out var seed);
+                        Console.WriteLine($"Setting seed = {seed}.");
                         random = new Random(seed);
                         if (!success)
                         {
@@ -102,12 +94,41 @@ namespace SbbChallenge
                         break;
                     }
 
-                    case "maxtime":
-                        break;
+                    case "maxtime": 
+                    case "t":
+                    {
+                        bool success = int.TryParse(argument, out var t);
+                        maxTime = TimeSpan.FromSeconds(t);
+                        Console.WriteLine($"Setting maxTime = {maxTime.Show()}.");
 
-                    case "maxIter":
+                        if (!success)
+                        {
+                            Console.WriteLine(
+                                $"Failure: Unable to parse integer number for maxTime, input = {argument}");
+                            return false;
+                        }
+                        break;
+                    }
+
+                    case "maxiter":
+                    case "i":
                     {
                         bool success = int.TryParse(argument, out maxIter);
+                        Console.WriteLine($"Setting maxIter = {maxIter}.");
+                        if (!success)
+                        {
+                            Console.WriteLine(
+                                $"Failure: Unable to parse integer number for maxIter, input = {argument}");
+                            return false;
+                        }
+                        break;
+                    }
+                    
+                    case "restrictRouting":
+                    case "r":
+                    {
+                        bool success = int.TryParse(argument, out restrictRouting);
+                        Console.WriteLine($"Setting restrictRouting = {restrictRouting}.");
 
                         if (!success)
                         {
@@ -124,19 +145,17 @@ namespace SbbChallenge
                 }
             }
 
-            if (inputFile == null) Console.WriteLine("Failure: No input file specified.");
-
-            return inputFile != null;
+            return true;
         }
         
 
         public static void Main(string[] args)
         {
-            //if (!TryParseInput(args, out var rang, out var file, out var maxTime, out var maxIter))
-            //{
-            //   ShowUsage();
-            //   return;
-            //}
+            if (!TryParseInput(args, out var rand, out var file, out var maxTime, out var maxIter, out var restrictRouting))
+            {
+               ShowUsage();
+               return;
+            }
             
             Console.ForegroundColor = ConsoleColor.Black;
             //Console.BackgroundColor = ConsoleColor.White;
@@ -181,21 +200,34 @@ namespace SbbChallenge
             
             ShowActiveAsserts();
 
-            //LiteratureInstances.Start();
-            //return;
+            IProblem iproblem;
             
+            if (file.EndsWith(".txt"))
+            {    
+                iproblem = AcademicInstances.LiteratureProblem.ReadFormFile(file);
+            }
+            else if (file.EndsWith(".json"))
+            {
+                Scenario scenario = Scenario.ReadFromFile(file);
+
+                Console.Write($"Setting up scenario...");
+                scenario.Setup();
+                Console.WriteLine(" done.");
             
-            Scenario scenario = Scenario.ReadFromFile(InputFiles[5]);
-            Console.Write($"Setting up scenario...");
-            scenario.Setup();
-            Console.WriteLine(" done.");
-            
-            IProblem iproblem = scenario;
-            
-            //Console.Write($"Restricting route choices...");
-            //iproblem = iproblem.RestrictRouteChoices(1);
-            //Console.WriteLine(" done.");
-            
+                iproblem = scenario;
+            }
+            else
+            {
+                return;
+            }
+
+            if (restrictRouting < Int32.MaxValue)
+            {
+                Console.Write($"Restricting route choices...");
+                iproblem = iproblem.RestrictRouteChoices(restrictRouting, rand);
+                Console.WriteLine(" done.");
+            }
+
             Console.WriteLine("Removing redundant machines.");
             StringBuilder report = new StringBuilder();
             iproblem.RemoveRedundantMachines(report);
@@ -208,8 +240,6 @@ namespace SbbChallenge
 
             var problem = new Problem(iproblem, loadConnections: true);
 
-            //File.WriteAllText("../../problemPrint.txt", problem.ToString());
-            
             IJobShopLayer jobShop = new JobShopLayer(problem);
 
             IEnumerable<(Job, Route)> initialRouting = problem.Jobs
@@ -218,9 +248,7 @@ namespace SbbChallenge
             
             jobShop.CreateInitialSolution(initialRouting);
 
-
-            var searchReport = SingleThreadSearch.Run("run_0", jobShop, new Random(), 0, Int32.MaxValue);
-
+            var searchReport = SingleThreadSearch.Run("run_0", jobShop, rand, 0, maxIter, maxTime);
         }
     }
 }

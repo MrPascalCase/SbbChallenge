@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 using sbbChallange.ProblemDefinition;
 using SbbChallenge.Helpers;
@@ -309,7 +308,7 @@ namespace sbbChallange.Layers
             }
         }
 
-        public void UpdateTimes(CancellationToken cTok)
+        public void UpdateTimes()
         {
             if (_necessaryFixes.Count == 0) return;
 
@@ -318,8 +317,6 @@ namespace sbbChallange.Layers
 
             while (_necessaryFixes.Count > 0)
             {
-                if (cTok != default && cTok.IsCancellationRequested) return;
-
                 int current = _necessaryFixes.Min.Vertex;
                 _necessaryFixes.Remove(_necessaryFixes.Min);
 
@@ -609,7 +606,7 @@ namespace sbbChallange.Layers
                 return this.IsEquivalentTo(other) && CostLayer.Equals(other.CostLayer);
             }
 
-            UpdateTimes(default);
+            UpdateTimes();
             other.UpdateTimes();
 
             return this.IsEquivalentTo(other) && CostLayer.Equals(other.CostLayer);
@@ -627,7 +624,7 @@ namespace sbbChallange.Layers
         {
             if (!TimesAreUpToDate()) throw new Exception();
 
-            UpdateTimes(default);
+            UpdateTimes();
             Assert(GraphLayerChecks, _necessaryFixes.Count == 0);
 
             return new GraphLayer(_graph.Clone(), CostLayer.Clone());
