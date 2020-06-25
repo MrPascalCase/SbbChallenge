@@ -32,7 +32,7 @@ The links to the challenge:
 
 ```console
 $ msbuild SbbChallenge.csproj
-$ mono obj/SbbChallenge.exe -i <path-to-sbb-problem>
+$ mono obj/SbbChallenge.exe <path-to-sbb-problem> [-s <seed>] [-i <maxIter>] [-t <maxSeconds>] [-r <maxRoutesToConsiderPerJob>] 
 ```
 
 ## Documentation
