@@ -1,8 +1,8 @@
 # Adaptation of the Gröflin-Klinkert-Bürgy Local Search for the Sbb Crowd AI Challenge
 
-On this github repository you find the code for my master thesis & project. 
+On this github repository you find my master [thesis](https://github.com/MrPascalCase/SbbChallenge/blob/master/Thesis.pdf) & project. 
 
-The SBB (swiss federal railways) challenge is a time table generation problem. At the core this corresponds to academic model of a *blocking-job-shop scheduling problem*: Given is a set of *jobs* (trains) each has to go through a set of *operations*. Operations conflict if they use the same *machine* (track segment). Each machine can only be used by one job at a time. The aim is, to assign conflict free entry times, such that the delay is minimized. A main complication comes form the *blocking* nature of the problem: a machine is only freed, when a job moved to the next.
+The SBB (swiss federal railways) challenge is a time table generation problem. At the core this is a *blocking-job-shop scheduling problem*: Given is a set of *jobs* (trains) each has to go through a set of *operations*. Operations conflict if they use the same *machine* (track segment). Each machine can only be used by one job at a time. The aim is, to assign conflict free entry times, such that the delay is minimized. A main complication comes form the *blocking* nature of the problem: a machine is only freed, when a job moved to the next.
 
 The links to the challenge:
 
@@ -32,30 +32,25 @@ $ mono obj/SbbChallenge.exe -i <path-to-sbb-problem>
 
 ## Documentation
 
-The code is mostly documented though the use of interfaces and comments. This I complement here by an quick overview of the project organization. I presume that the reader has some knowledge of the algorithm implemented here. For this I refer to the thesis (pdf). Chapters 1 & 4 can be skipped. Chapter 2 can be skipped by readers familiar with the work of Gröflin, Klinkert & Bürgy. 
+The code is mostly documented though interfaces and comments. Here by an quick overview of the project organization. I presume that the reader has some knowledge of the algorithm implemented here. For this I refer to the thesis (pdf). Chapters 1 & 4 can be skipped. Chapter 2 can be skipped by readers familiar with the work of Gröflin, Klinkert & Bürgy. 
 
 First, we get the easy things out of the way. These name-spaces ....
 
-* **IntegrityChecks:** essentially glorified asserts. Asserts are categorized, as some of them are so slow that I need control over which ones are currently on/checked and which ones are off. 
+* **IntegrityChecks:** fancy asserts. There are many, and some are so slow, that it became necessary to enable/disable and document them. 
 
 * **Helper:** some LINQ-like extensions and basic data types. Of note is the class Graph which implements a forward/backward adjacency list graph (vertices : int, edges labeled with (machineId : int) * (length : TimeSpan)). 
 
-* **ProblemDefintion:** IProblem defines the blocking-job-shop problem general enough, that both, instances studied in academia and the problems provided by SBB are modelled as such. The class Problem (immutable) is constructed form an IProblem and caches/preprocesses various things. (Problem also implements IProblem, so that you could write IProblem transformers that depend on cached/prepocessed properties) ProblemTransformation provided IProblem extension methods to remove unnecessary Routes/Machines/Operations.
+* **ProblemDefintion:** IProblem defines the blocking-job-shop problem general enough, that both, instances studied in academia and the problems provided by SBB are modelled as such. The class Problem (immutable) is constructed form an IProblem and caches/preprocesses various things. ProblemTransformation provided IProblem extension methods to remove unnecessary Routes/Machines/Operations.
 
 * **InputProblem:** Constructs the SBB (or academic literature) blocking-job-shop problem from json (or txt) files. Implements ProblemDefinition.IProblem.
 
-* **Visualization:** Can create svg debug output for precedence-constraint graph we are working with.
+* **Visualization:** Can create svg debug output for the precedence-constraint graphs we are working with.
 
 * **Search:** The algorithm provides a neighborhood. This runs a taboo-search to find a local optimum. It is kept as simple as possible. 
 
-With this out of the way, we come to the core of the algorithm, the names-space **Layers**. I tried to split the algorithm into reasonable modules to increase readability and make modifications/experiments easier. Guiding principles are *single responsibility* and avoidance of *cyclic dependencies*. At the bottom of the layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifications of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibility of solutions. 
+The core of the algorithm, the names-space **Layers:** I tried to split the algorithm into reasonable modules to increase readability and to make modifications/experiments easier. Guiding principles are *single responsibility* and avoidance of *cyclic dependencies*. At the bottom of the resulting layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifications of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibility of solutions. Note, the file Layers._Interfaces.cs, which both enforces some modularity and provides some overview/documentation is a good starting point to read the code.
 
 <img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage.png" alt="drawing" height="600"/>
-
-## Where to start?
-
-Make sure you understand the problem definition in ProblemDefinition.IProblem, ie. the blocking-job-shop scheduling problem first. Second, Layers._Interfaces.cs is intended to serve the dual purpose of enforcing modularity and providing some overview/documentation.
-
 
 ## Most important references
 
