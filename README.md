@@ -31,6 +31,7 @@ The links to the challenge:
 ## Usage
 
 ```console
+$ cd SbbChallenge/
 $ msbuild SbbChallenge.csproj
 $ mono obj/SbbChallenge.exe <path-to-sbb-problem> [-s <seed>] [-i <maxIter>] [-t <maxSeconds>] [-r <maxRoutesToConsiderPerJob>] 
 ```
