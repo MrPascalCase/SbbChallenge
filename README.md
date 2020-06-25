@@ -30,11 +30,16 @@ The links to the challenge:
 
 ## Usage
 
+### Linux
+
 ```console
 $ cd SbbChallenge/
 $ msbuild SbbChallenge.csproj
 $ mono obj/SbbChallenge.exe <path-to-sbb-problem> [-s <seed>] [-i <maxIter>] [-t <maxSeconds>] [-r <maxRoutesToConsiderPerJob>] 
 ```
+### Other OS
+
+Is left as an exercise for the reader.
 
 ## Documentation
 
