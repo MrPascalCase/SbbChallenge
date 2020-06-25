@@ -2,6 +2,8 @@
 
 <img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage1.png" alt="drawing" height="800"/>
 
+(Image: A visualization of a precedence constraint graph representing a time table.)
+
 On this github repository you find my master [thesis](https://github.com/MrPascalCase/SbbChallenge/blob/master/Thesis.pdf) & project. 
 
 The SBB (swiss federal railways) challenge is a time table generation problem. At the core this is a *blocking-job-shop scheduling problem*: Given is a set of *jobs* (trains) each has to go through a set of *operations*. Operations conflict if they use the same *machine* (track segment). Each machine can only be used by one job at a time. The aim is, to assign conflict free entry times, such that the delay is minimized. A main complication comes form the *blocking* nature of the problem: a machine is only freed, when a job moved to the next.
@@ -24,7 +26,7 @@ The links to the challenge:
     - System.Xml (only used to convert SBB time stamps)
     - System.Drawing (only used for color names to generate debug svg output)
 
-* dot / graphviz if you want to output debug visualizations. (<https://graphviz.org/>)
+* dot / graphviz if you want to output debug visualizations (such as the image above, <https://graphviz.org/>)
 
 ## Usage
 
