@@ -50,7 +50,7 @@ First, we get the easy things out of the way. These namespaces ....
 
 With this out of the way, we come to the core of the algorithm, the namesspace **Layers**. I tried to split the algorithm into reasonable modules to increase readability and make modifications/experiments easier. Guideing princibles are *single responsability* and avoidance of *cyclic dependancies*. At the bottom of the layered approach we have a *ISolution* (representing the vector *t* in the thesis). Built on-top we have layers which expose ever more complex modifiations of the ISolution. While the modifications increase in complexity, they come closer to maintaining the feasibilty of solutions. 
 
-<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/readme_img_layers.png" alt="drawing" height="600"/>
+<img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage.png" alt="drawing" height="600"/>
 
 ## Where to start?
 
