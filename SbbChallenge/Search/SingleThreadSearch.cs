@@ -351,6 +351,7 @@ namespace sbbChallange.Search
                     ("Problem", problemName.ToString),
                     newLine,
                     ("Iteration", iter.ToString),
+                    ("Time passed", () => sw.Elapsed.Show()),
                     ("Current Total Cost", Math.Round(currentSolution.GetTotalCost(), 2).ToString),
                     ("Current Routing Cost", Math.Round(currentSolution.GetRoutingCost(), 2).ToString),
                     ("Current Delay Cost", Math.Round(currentSolution.GetDelayCost(), 2).ToString),

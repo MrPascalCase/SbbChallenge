@@ -40,13 +40,13 @@ namespace SbbChallenge
             
         static bool TryParseInput(
             string[] args, 
-            out Random random, 
+            out int seed, 
             out string inputFile, 
             out TimeSpan maxTime,
             out int maxIter, 
             out int restrictRouting)
         {
-            random = new Random();
+            seed = new Random().Next();
             inputFile = null;
             maxIter = Int32.MaxValue;
             maxTime = TimeSpan.MaxValue;
@@ -82,9 +82,8 @@ namespace SbbChallenge
                     case "s":
                     case "seed":
                     {
-                        bool success = int.TryParse(argument, out var seed);
+                        bool success = int.TryParse(argument, out seed);
                         Console.WriteLine($"Setting seed = {seed}.");
-                        random = new Random(seed);
                         if (!success)
                         {
                             Console.WriteLine(
@@ -151,11 +150,12 @@ namespace SbbChallenge
 
         public static void Main(string[] args)
         {
-            if (!TryParseInput(args, out var rand, out var file, out var maxTime, out var maxIter, out var restrictRouting))
+            if (!TryParseInput(args, out var seed, out var file, out var maxTime, out var maxIter, out var restrictRouting))
             {
                ShowUsage();
                return;
             }
+            Random rand = new Random(seed);
             
             Console.ForegroundColor = ConsoleColor.Black;
             //Console.BackgroundColor = ConsoleColor.White;
@@ -248,7 +248,21 @@ namespace SbbChallenge
             
             jobShop.CreateInitialSolution(initialRouting);
 
-            var searchReport = SingleThreadSearch.Run("run_0", jobShop, rand, 0, maxIter, maxTime);
+            var searchReport = SingleThreadSearch.Run($"run_{seed}", jobShop, rand, 0, maxIter, maxTime);
+
+            
+            // Data collected for the Objective value vs execution time plot (Thesis, Fig 7 b)
+            /*
+            if (File.Exists("../../output.csv"))
+            {
+                File.AppendAllLines("../../output.csv", searchReport.ToCsv().Split('\n').Skip(1));
+            }
+            else
+            {
+                File.WriteAllText("../../output.csv", searchReport.ToCsv());
+            }
+            Console.WriteLine(searchReport.ToCsv());
+            */
         }
     }
 }

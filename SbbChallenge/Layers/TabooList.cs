@@ -13,7 +13,7 @@ namespace sbbChallange.Mutable.Search
     {
         public static readonly Switch Checks = new Switch(nameof(TabooList) + "." + nameof(Checks));
         
-        public const int ArcTabooLength = 4; // if any of those are set to '0', we treat the resp. taboo type as disabled
+        public const int ArcTabooLength = 5; // if any of those are set to '0', we treat the resp. taboo type as disabled
         public const int RouteTabooLength = 5; 
 
         private readonly List<Arc> _prohibitedArcs;
