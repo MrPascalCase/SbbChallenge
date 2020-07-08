@@ -1,4 +1,4 @@
-# Adaptation of the Gröflin-Klinkert-Bürgy Local Search for the Sbb Crowd AI Challenge
+# On Job-Insertion for the Blocking-Job-Shop and its Application to the SBB Challenge
 
 <img src="https://github.com/MrPascalCase/SbbChallenge/blob/master/ReadmeImage1.png" alt="drawing" height="500"/>
 
